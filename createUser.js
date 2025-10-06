@@ -14,6 +14,7 @@ createUserForm.addEventListener("submit", async (e) => {
         Email: createUserForm.email.value,
         Age: createUserForm.age.value
     }
+    
 
     console.log(user);
     // api  post  to  send  the  data  thet inputs  by  user  in  form 

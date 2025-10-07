@@ -27,6 +27,21 @@
         <label for="age" class="form-label">age</label>
         <input type="number" id="age" class="form-control" aria-describedby="age" name="age">
 
+
+        <div class="input-group mb-3 border-dark outline-dark py-3 ">
+            <div class="input-group-prepend ">
+                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file ">
+                <input type="file" class="form-control" id="formFile" aria-describedby="inputGroupFileAddon01"
+                    name="image">
+                <label class="custom-file-label  border-dark outline-dark " for="inputGroupFile01">Choose file</label>
+            </div>
+        </div>
+
+        <!--   to  disply and  read  the  file  (image) using  js  -->
+        <img src="" alt="" id="prieviwe">
+
         <button type="submit" class="btn btn-outline-dark"> add</button>
     </form>
 

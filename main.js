@@ -1,3 +1,6 @@
+
+const loader=document.querySelector((".loader"));
+
 const getUsers = async (page) => {
     const limit = 5; // how many users per page
     const skip = (page - 1) * limit; // 🔍 why: skip = how many users to "skip" before starting this page (pagination math)
@@ -11,6 +14,10 @@ const getUsers = async (page) => {
 
 
 const displayUsers = async (page = 1) => {
+    try{
+
+    loader.classList.remove("d-none");
+
     const response = await getUsers(page); // 🔍 why: call the API and get the current page of users
     if (!response) return;
 
@@ -35,7 +42,7 @@ const displayUsers = async (page = 1) => {
                 <td><img src="${user.imageUrl}" width="200px" /></td>
                 <td>
                     <a href='./detasil.html?user_id=${user.id}' class="btn btn-outline-dark">detasils</a>
-                    <button class="btn btn-outline-danger" onclick=deleteUser("${user.id}")>delete</button>
+                    <button class="btn btn-outline-danger" onclick=deleteUser(event,"${user.id}")>delete</button>
                 </td>
             </tr>`;
         })
@@ -46,6 +53,13 @@ const displayUsers = async (page = 1) => {
 
     // 🔍 why: Call the pagination function separately
     renderPagination(page, numberOfPages);
+     
+    }catch(err){
+console.log(err);
+    }finally{//  when we  used  the  finally  
+            loader.classList.add("d-none");
+
+    }
 };
 
 
@@ -93,7 +107,13 @@ const renderPagination = (currentPage, totalPages) => {
 
 
 // 🔍 why: confirm delete with SweetAlert, then refresh data
-const deleteUser = (id) => {
+//  used  event  thet  send  from  the when  delete  clike  to  btton  clike  
+//  the  event  its help  me  to  now  which , elemt  i  clike  in  ?  
+const deleteUser = (event,id) => {
+
+    console.log(event.target.closest('tr'));
+
+
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -106,12 +126,28 @@ const deleteUser = (id) => {
         if (result.isConfirmed) {
             const response = await axios.delete(`http://ums12.runasp.net/api/users/${id}`);
             if (response.status === 200) {
+                //  its  remove  the  html  tr  from  screan but  not  delet  it  fron  db 
+                //  when  its call  anothere  page  it  will  update  the db  , but  in same  bage  will be  hidden  
+                event.target.closest('tr').remove();
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success",
                 });
-                displayUsers(); // 🔍 why: re-fetch users from API after delete (refresh the data)
+
+                // re-fetch users from API after delete (refresh the data)
+                //  the  problem hear  with  each  date  for  user  it  will  call  all  the fun of  display  
+                //  and  send  a  respons  which  is  need time  
+               // displayUsers();
+
+
+               // solution  1 : when the  user  is delete a user  ,  i  will  say  to  backedn  
+               //  send  a  now  data  after  delet  as  response  but  this  is  a  problem  becouse  the response e will be  large
+
+               //  solution  2 : by  js  there is   a  fun  remove which  is  can delete  a  html  elemnt  
+               
+
+
             }
         }
     });
